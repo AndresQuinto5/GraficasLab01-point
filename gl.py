@@ -16,8 +16,13 @@ def color(r, g, b):
     return bytes([b, g, r])
 
 class Render(object):
-    def __init__(self):
+    def __init__(self,):
         self.framebuffer = []
+
+    def glinit(self, width, height,r, g, b):
+    	self.glCreateWindow(width, height)
+    	self.glClearColor(r, g, b)
+    	self.glClear()
 
     def clear(self, r, g, b):
         self.framebuffer =[
@@ -26,38 +31,49 @@ class Render(object):
         ]
 #Features gl
     #inicializa el frame buffer con un tamaño
+
     def glCreateWindow(self, width, height):
         self.width = width
         self.height = height
+
     #Inicializa el framebuffer con especificaciones sobre donde puede dibujar
+
     def glViewport(self, x, y, width, height):
         self.viewPortWidth = width
         self.viewPortHeight = height
         self.xViewPort = x
         self.yViewPort = y
     #llena el mapa de un solo color
+
     def  glClear(self):
         self.clear()
+
     #Funcion con la cual podemos cambiar el color de gl clear (solo numeros de 0 a 1)
+
     def glClearcolor(self, r, g, b):
+
         #evitamos que se obtengan valores decimales
+
         r = round(r*255)
         g = round(g*255)
         b = round(b*255)
         self.clear(r, g, b)
     #Función que nos permite cambiar el color de un punto en pantalla
+
     def glVertex(self, x,y):
-        calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
-        calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
-        self.point(calcX, calcY)
+        gX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
+        gY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
+        self.point(gX, gY)
+
     #Operacion la cual nos permite cambiar el color con el que funciona glVertex
+
     def glColor(self, r,g,b):
         r = round(r*255)
         g = round(g*255)
         b = round(b*255)
         return color(r, g, b)
 
-    def write(self, filename):
+    def glFinish(self, filename):
         f = open(filename, 'bw')
 
         #Header
@@ -84,7 +100,6 @@ class Render(object):
 
         for x in range(self.width):
                 for y in range(self.height):
-                        #print(self.width,' ', self.height,' hola')
                         f.write(self.framebuffer[y][x])
 
         f.close()
@@ -96,8 +111,10 @@ class Render(object):
 
    
 r = Render()
+#r.glinit(100, 100, 0.14, 0.2018, 0.26 )
 r.glCreateWindow(100, 100)
 r.glClearcolor(0.14, 0.2018, 0.26)
 r.glViewport(10, 00, 50, 50)
 r.glVertex(1, 1)
-r.write('out.bmp')
+r.glFinish('out.bmp')
+#sad
